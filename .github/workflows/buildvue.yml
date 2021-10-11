@@ -24,37 +24,35 @@ jobs:
       id: vars
       run: |
         PR=$( echo "${{ github.event.comment.issue_url }}" | grep -oE 'issues/([0-9]+)$' | cut -d'/' -f 2 )
-        echo "before curl"
+
         PR_INFO=$( curl \
                  --request GET \
                  --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
                  --header 'content-type: application/json' \
                  --url https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$PR )
-        echo "after curl"
         REF=$(echo "${PR_INFO}" | jq -r .head.ref)
         BASE=$(echo "${PR_INFO}" | jq -r .head.repo.full_name)
         STATE=$(echo "${PR_INFO}" | jq -r .state)
 
-        echo "1"
         if [[ $STATE == "closed" ]]
         then
           echo "Pull Request already closed."
           exit 0;
         fi
 
-        echo "2"
         if [[ $BASE != $GITHUB_REPOSITORY ]]
         then
           echo "It's only possible to update local branches"
           exit 0;
         fi
 
-        echo "3"
-        ls /home/runner/work/matomo/matomo
-        ls /home/runner/work/matomo
-
         echo ::set-output name=branch::$REF
       if: github.event.comment.body == 'build vue'
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ steps.vars.outputs.branch }}
+        lfs: false
+      if: steps.vars.outputs.branch != ''
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -76,11 +74,6 @@ jobs:
         restore-keys: ${{ runner.os }}-composer-
     - name: Install dependencies
       run: composer install --prefer-dist
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ steps.vars.outputs.branch }}
-        lfs: false
-      if: steps.vars.outputs.branch != ''
     - name: Prepare git config
       run: |
         cat <<- EOF > $HOME/.netrc
