@@ -46,6 +46,8 @@ jobs:
           exit 0;
         fi
 
+        ls /home/runner/work/matomo/matomo
+
         echo ::set-output name=branch::$REF
       if: github.event.comment.body == 'build vue'
     - name: Setup PHP
