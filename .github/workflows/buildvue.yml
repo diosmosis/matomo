@@ -74,6 +74,16 @@ jobs:
         restore-keys: ${{ runner.os }}-composer-
     - name: Install dependencies
       run: composer install --prefer-dist
+    - name: Quick Matomo Install
+      run: |
+        cat <<-EOF > ./config/config.ini.php
+          [General]
+          always_load_commands_from_plugin=CoreVue
+
+          [Development]
+          enabled = 1
+        EOF
+      if: steps.vars.outputs.branch != ''
     - name: Prepare git config
       run: |
         cat <<- EOF > $HOME/.netrc
