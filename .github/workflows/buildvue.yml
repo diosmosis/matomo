@@ -24,12 +24,13 @@ jobs:
       id: vars
       run: |
         PR=$( echo "${{ github.event.comment.issue_url }}" | grep -oE 'issues/([0-9]+)$' | cut -d'/' -f 2 )
-
+        echo "before curl"
         PR_INFO=$( curl \
                  --request GET \
                  --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
                  --header 'content-type: application/json' \
                  --url https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$PR )
+        echo "after curl"
         REF=$(echo "${PR_INFO}" | jq -r .head.ref)
         BASE=$(echo "${PR_INFO}" | jq -r .head.repo.full_name)
         STATE=$(echo "${PR_INFO}" | jq -r .state)
