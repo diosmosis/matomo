@@ -77,12 +77,14 @@ jobs:
     - name: Quick Matomo Install
       run: |
         cat <<-EOF > ./config/config.ini.php
-          [General]
-          always_load_commands_from_plugin=CoreVue
+        [General]
+        always_load_commands_from_plugin=CoreVue
 
-          [Development]
-          enabled = 1
+        [Development]
+        enabled = 1
         EOF
+
+        cat ./config/config.ini.php
       if: steps.vars.outputs.branch != ''
     - name: Prepare git config
       run: |
