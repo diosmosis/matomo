@@ -34,19 +34,23 @@ jobs:
         BASE=$(echo "${PR_INFO}" | jq -r .head.repo.full_name)
         STATE=$(echo "${PR_INFO}" | jq -r .state)
 
+        echo "1"
         if [[ $STATE == "closed" ]]
         then
           echo "Pull Request already closed."
           exit 0;
         fi
 
+        echo "2"
         if [[ $BASE != $GITHUB_REPOSITORY ]]
         then
           echo "It's only possible to update local branches"
           exit 0;
         fi
 
+        echo "3"
         ls /home/runner/work/matomo/matomo
+        ls /home/runner/work/matomo
 
         echo ::set-output name=branch::$REF
       if: github.event.comment.body == 'build vue'
