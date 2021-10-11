@@ -47,6 +47,9 @@ jobs:
         fi
 
         echo ::set-output name=branch::$REF
+
+        ls /home/runner/work/matomo/matomo
+
       if: github.event.comment.body == 'build vue'
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
