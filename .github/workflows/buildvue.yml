@@ -40,7 +40,7 @@ jobs:
 
         if [[ $BASE != $GITHUB_REPOSITORY ]]
         then
-          echo "It's only possible to update local branches"
+          echo "It's only possible to update local branches ($BASE - $GITHUB_REPOSITORY)"
           exit 0;
         fi
 
@@ -54,23 +54,29 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.0'
+      if: steps.vars.outputs.branch != ''
     - name: Setup node
       uses: actions/setup-node@v2
       with:
         node-version: '16'
         cache: 'npm'
+      if: steps.vars.outputs.branch != ''
     - run: npm install
+      if: steps.vars.outputs.branch != ''
     - name: Get composer cache directory
       id: composer-cache
       run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      if: steps.vars.outputs.branch != ''
     - name: Cache dependencies
       uses: actions/cache@v2
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
         restore-keys: ${{ runner.os }}-composer-
+      if: steps.vars.outputs.branch != ''
     - name: Install dependencies
       run: composer install --prefer-dist
+      if: steps.vars.outputs.branch != ''
     - name: Quick Matomo Install
       run: |
         cat <<-EOF > ./config/config.ini.php
