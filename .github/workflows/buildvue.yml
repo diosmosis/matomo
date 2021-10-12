@@ -1,8 +1,6 @@
 name: Build Vue files
 
-on:
-  issue_comment:
-    types: [created]
+on: pull_request
 
 permissions:
   actions: read
@@ -47,7 +45,6 @@ jobs:
         fi
 
         echo ::set-output name=branch::$REF
-      if: github.event.comment.body == 'build vue'
     - uses: actions/checkout@v2
       with:
         ref: ${{ steps.vars.outputs.branch }}
