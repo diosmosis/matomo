@@ -1,8 +1,6 @@
 name: Build Vue files
 
-on:
-  issue_comment:
-    types: [created]
+on: pull_request
 
 permissions:
   actions: read
@@ -47,10 +45,11 @@ jobs:
         fi
 
         echo ::set-output name=branch::$REF
-
-        ls /home/runner/work/matomo/matomo
-
-      if: github.event.comment.body == 'build vue'
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ steps.vars.outputs.branch }}
+        lfs: false
+      if: steps.vars.outputs.branch != ''
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -58,7 +57,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '16'
         cache: 'npm'
     - run: npm install
     - name: Get composer cache directory
@@ -72,10 +71,17 @@ jobs:
         restore-keys: ${{ runner.os }}-composer-
     - name: Install dependencies
       run: composer install --prefer-dist
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ steps.vars.outputs.branch }}
-        lfs: false
+    - name: Quick Matomo Install
+      run: |
+        cat <<-EOF > ./config/config.ini.php
+        [General]
+        always_load_commands_from_plugin=CoreVue
+
+        [Development]
+        enabled = 1
+        EOF
+
+        cat ./config/config.ini.php
       if: steps.vars.outputs.branch != ''
     - name: Prepare git config
       run: |
