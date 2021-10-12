@@ -1518,6 +1518,7 @@ Periods_Periods.addCustomPeriod('year', Year_YearPeriod);
 
 
 
+console.log('justatest');
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js
 
 
