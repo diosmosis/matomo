@@ -40,8 +40,8 @@ jobs:
 
         if [[ $BASE != $GITHUB_REPOSITORY ]]
         then
-          echo "It's only possible to update local branches ($BASE - $GITHUB_REPOSITORY)"
-          exit 0;
+          echo "It's only possible to update local branches (${PR_INFO} - $PR - $GITHUB_REPOSITORY))"
+          exit 1;
         fi
 
         echo ::set-output name=branch::$REF
