@@ -21,7 +21,7 @@ jobs:
     - name: Detect branch for PR
       id: vars
       run: |
-        PR=$( echo "${{ github.event.comment.issue_url }}" | grep -oE 'issues/([0-9]+)$' | cut -d'/' -f 2 )
+        PR=$( echo "${{ github.event.pull_request.issue }}" | grep -oE 'issues/([0-9]+)$' | cut -d'/' -f 2 )
 
         PR_INFO=$( curl \
                  --request GET \
@@ -40,7 +40,7 @@ jobs:
 
         if [[ $BASE != $GITHUB_REPOSITORY ]]
         then
-          echo "It's only possible to update local branches - $GITHUB_HEAD_REF - ${{ github.event }}"
+          echo "It's only possible to update local branches - $PR - $PR_INFO"
           exit 1;
         fi
 
