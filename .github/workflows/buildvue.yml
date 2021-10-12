@@ -40,9 +40,11 @@ jobs:
 
         if [[ $BASE != $GITHUB_REPOSITORY ]]
         then
-          echo "It's only possible to update local branches - $PR - $PR_INFO - ${{ github.event.pull_request.number }}"
+          echo "It's only possible to update local branches"
           exit 1;
         fi
+
+        echo "$PR - $PR_INFO - ${{ github.event.pull_request.number }}"
 
         echo ::set-output name=branch::$REF
     - uses: actions/checkout@v2
