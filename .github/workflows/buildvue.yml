@@ -40,7 +40,7 @@ jobs:
 
         if [[ $BASE != $GITHUB_REPOSITORY ]]
         then
-          echo "It's only possible to update local branches - $GITHUB_HEAD_REF - $GITHUB_REF"
+          echo "It's only possible to update local branches - $GITHUB_HEAD_REF - ${{ github.event }}"
           exit 1;
         fi
 
